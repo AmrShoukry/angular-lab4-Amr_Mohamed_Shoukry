@@ -1,0 +1,15 @@
+<form (ngSubmit)="edit(studentForm)" #studentForm class="p-3 border rounded shadow-sm bg-light">
+
+  <div class="mb-3">
+    <input type="text" name="name" placeholder="Name" [(ngModel)]="name" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <input type="number" name="age" placeholder="Age" [(ngModel)]="age" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-success w-100">
+    Edit
+  </button>
+
+</form>

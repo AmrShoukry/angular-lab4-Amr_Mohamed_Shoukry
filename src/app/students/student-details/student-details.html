@@ -1,0 +1,19 @@
+@if (student()) {
+<div class="container mt-3">
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+
+      <h5 class="card-title mb-2">
+        {{ student()?.name }}
+      </h5>
+
+      <p class="card-text mb-0 text-muted">
+        Age: {{ student()?.age }}
+      </p>
+
+    </div>
+  </div>
+
+</div>
+}

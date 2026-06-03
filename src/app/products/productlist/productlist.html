@@ -1,0 +1,51 @@
+<div class="col-12">
+  <div class="card shadow-sm">
+    <div class="card-header bg-success text-white">
+      Products
+    </div>
+
+    <div class="card-body">
+      <app-products-filter [categories]="categories()" [selectedCategoryId]="selectedCategoryId()"
+        (selectedCategoryIdChange)="changeCategory($event)" [totalPrice]="totalPrice()"></app-products-filter>
+
+      <div class="container mt-3">
+        <div class="row g-3">
+
+          @for (product of products() | productsFilter:selectedCategoryId(); track product.id) {
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100">
+
+              <img [src]="product.imgUrl" class="card-img-top" alt="{{ product.name }}">
+
+              <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+
+                <p class="card-text mb-1">Price: {{ product.price }}</p>
+                <p class="card-text mb-1">Quantity: {{ product.quantity }}</p>
+
+                <p class="card-text mb-2">Category: {{ product.catId }}</p>
+
+                <input type="number" class="form-control mb-2" #quantity placeholder="Quantity">
+
+                <button class="btn btn-primary w-100" (click)="buyProduct(product, quantity.value)">
+                  Buy Now
+                </button>
+              </div>
+
+            </div>
+          </div>
+          }
+
+          @empty {
+          <div class="col-12">
+            <div class="alert alert-warning text-center">
+              No Products
+            </div>
+          </div>
+          }
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

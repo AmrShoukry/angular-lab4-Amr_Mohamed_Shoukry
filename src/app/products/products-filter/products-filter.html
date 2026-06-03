@@ -1,0 +1,33 @@
+<div class="container mt-3">
+
+  <div class="row align-items-center g-3 mb-3">
+
+    <div class="col-12 col-md-6">
+      <div class="p-3 bg-light border rounded shadow-sm">
+        <p class="fw-semibold mb-1">
+          Total Price = {{ totalPrice() }}
+        </p>
+
+        <p class="text-muted mb-0">
+          Selected Category Id = {{ selectedCategoryId() }}
+        </p>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+      <div class="p-2 bg-white border rounded shadow-sm">
+        <select #cat (change)="changeCategory(cat.value)" [value]="selectedCategoryId()" class="form-select">
+          <option [value]="0">All</option>
+
+          @for (category of categories(); track category.id) {
+          <option [value]="category.id" [selected]="category.id === selectedCategoryId() ? true : null">
+            {{ category.name }}
+          </option>
+          }
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+</div>

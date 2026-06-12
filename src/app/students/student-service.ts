@@ -1,41 +1,44 @@
-import { Injectable, signal, inject } from '@angular/core';
-import type { Student, StudentForm } from './student';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+import { map } from 'rxjs';
+import { API_BASE_URL } from '../api.config';
+import type { Student, StudentFormValue, StudentGrade } from './student';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentService {
-  students = signal<Student[]>([]);
-  selectedStudent = signal<Student | null>(null);
-  private baseUrl = 'http://localhost:3000/api/students/';
+  private readonly baseUrl = `${API_BASE_URL}/students`;
   private http = inject(HttpClient);
 
-  getStudents() {
+  getStudents(): Observable<Student[]> {
     return this.http.get<Student[]>(this.baseUrl);
   }
 
-  getSelectedStudent() {
-    return this.selectedStudent;
+  getStudentById(id: number): Observable<Student> {
+    return this.http.get<Student>(`${this.baseUrl}/${id}`);
   }
 
-  getStudentById(id: number) {
-    return this.http.get<Student>(`${this.baseUrl}${id}`);
+  addStudent(student: StudentFormValue): Observable<Student> {
+    return this.http.post<Student>(this.baseUrl, student);
   }
 
-  addStudent(student: StudentForm) {
-    return this.http.post<StudentForm>(this.baseUrl, student);
+  editStudent(id: number, updatedStudent: StudentFormValue): Observable<Student> {
+    return this.http.put<Student>(`${this.baseUrl}/${id}`, updatedStudent);
   }
 
-  editStudent(updatedStudent: Student) {
-    return this.http.put<Student>(`${this.baseUrl}${updatedStudent.id}`, updatedStudent);
+  deleteStudent(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  selectStudent(student: Student) {
-    return this.selectedStudent.set(student);
+  getStudentGrades(id: number): Observable<StudentGrade[]> {
+    return this.http
+      .get<StudentGrade[] | { value?: StudentGrade[] }>(`${this.baseUrl}/${id}/grades`)
+      .pipe(map((response) => (Array.isArray(response) ? response : (response.value ?? []))));
   }
 
-  deleteStudent(student: Student) {
-    return this.http.delete(`${this.baseUrl}${student.id}`);
+  addStudentGrade(id: number, grade: { courseId: number; grade: number }): Observable<unknown> {
+    return this.http.post(`${this.baseUrl}/${id}/grades`, grade);
   }
 }

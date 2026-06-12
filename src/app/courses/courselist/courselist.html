@@ -1,0 +1,45 @@
+<section class="card shadow-sm border-0">
+  <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <h1 class="h5 mb-0">Courses</h1>
+    <button class="btn btn-light btn-sm" type="button" (click)="createCourse()">Create Course</button>
+  </div>
+
+  <div class="card-body">
+    @if (loading()) {
+    <div class="alert alert-info mb-0">Loading courses...</div>
+    } @else if (error()) {
+    <div class="alert alert-danger mb-0">{{ error() }}</div>
+    } @else {
+    <div class="table-responsive">
+      <table class="table table-striped align-middle mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>Name</th>
+            <th>Credits</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (course of courses(); track course.id) {
+          <tr>
+            <td>{{ course.name }}</td>
+            <td>{{ course.credits }}</td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm" role="group" aria-label="Course actions">
+                <button class="btn btn-outline-primary" type="button" (click)="viewCourse(course)">Details</button>
+                <button class="btn btn-outline-secondary" type="button" (click)="editCourse(course)">Edit</button>
+                <button class="btn btn-outline-danger" type="button" (click)="deleteCourse(course)">Delete</button>
+              </div>
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="3" class="text-center text-muted py-4">No courses found.</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+  </div>
+</section>

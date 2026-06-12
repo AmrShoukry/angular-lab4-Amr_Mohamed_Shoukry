@@ -1,15 +1,51 @@
-<form (ngSubmit)="edit(studentForm)" #studentForm class="p-3 border rounded shadow-sm bg-light">
-
-  <div class="mb-3">
-    <input type="text" name="name" placeholder="Name" [(ngModel)]="name" class="form-control">
+<section class="card shadow-sm border-0">
+  <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <h1 class="h5 mb-0">Edit Student</h1>
+    <button class="btn btn-light btn-sm" type="button" (click)="back()">Back</button>
   </div>
 
-  <div class="mb-3">
-    <input type="number" name="age" placeholder="Age" [(ngModel)]="age" class="form-control">
+  <div class="card-body">
+    @if (loading()) {
+    <div class="alert alert-info mb-0">Loading student...</div>
+    } @else if (error()) {
+    <div class="alert alert-danger mb-0">{{ error() }}</div>
+    } @else {
+    <form class="row g-3" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="col-12">
+        <label class="form-label" for="student-name">Name</label>
+        <input id="student-name" class="form-control" type="text" formControlName="name" />
+        @if (form.controls.name.touched && form.controls.name.invalid) {
+        <div class="text-danger small mt-1">Name is required and must be at least 2 characters.</div>
+        }
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label" for="student-age">Age</label>
+        <input id="student-age" class="form-control" type="number" formControlName="age" min="1" />
+        @if (form.controls.age.touched && form.controls.age.invalid) {
+        <div class="text-danger small mt-1">Age is required.</div>
+        }
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label" for="student-department">Department</label>
+        <select id="student-department" class="form-select" formControlName="departmentId">
+          <option [value]="0">Select department</option>
+          @for (department of departments(); track department.id) {
+          <option [value]="department.id">{{ department.name }}</option>
+          }
+        </select>
+        @if (form.controls.departmentId.touched && form.controls.departmentId.invalid) {
+        <div class="text-danger small mt-1">Department is required.</div>
+        }
+      </div>
+
+      <div class="col-12 d-flex gap-2">
+        <button class="btn btn-primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Saving...' : 'Update Student' }}
+        </button>
+      </div>
+    </form>
+    }
   </div>
-
-  <button type="submit" class="btn btn-success w-100">
-    Edit
-  </button>
-
-</form>
+</section>

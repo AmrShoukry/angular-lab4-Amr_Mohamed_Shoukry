@@ -1,0 +1,81 @@
+<section class="card shadow-sm border-0">
+  <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <h1 class="h5 mb-0">Department Details</h1>
+    <div class="d-flex gap-2">
+      <button class="btn btn-light btn-sm" type="button" (click)="back()">Back</button>
+      <button class="btn btn-light btn-sm" type="button" (click)="edit()">Edit</button>
+      <button class="btn btn-light btn-sm" type="button" (click)="delete()">Delete</button>
+    </div>
+  </div>
+
+  <div class="card-body">
+    @if (loading()) {
+    <div class="alert alert-info mb-0">Loading department...</div>
+    } @else if (error()) {
+    <div class="alert alert-danger mb-0">{{ error() }}</div>
+    } @else if (department()) {
+    <div class="row g-3">
+      <div class="col-lg-4">
+        <div class="border rounded p-3 h-100">
+          <div class="text-muted small mb-1">Name</div>
+          <div class="fw-semibold">{{ department()!.name }}</div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="border rounded p-3 h-100">
+          <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+            <h2 class="h6 mb-0">Assigned Courses</h2>
+            <button class="btn btn-primary btn-sm" type="button" (click)="saveAssignments()" [disabled]="savingAssignments()">
+              {{ savingAssignments() ? 'Saving...' : 'Save Assignments' }}
+            </button>
+          </div>
+
+          <div class="row g-2">
+            @for (course of allCourses(); track course.id) {
+            <div class="col-md-6">
+              <label class="form-check border rounded p-2 w-100 mb-0">
+                <input class="form-check-input me-2" type="checkbox" [checked]="isCourseSelected(course.id)" (change)="toggleCourse(course.id, $any($event.target).checked)" />
+                <span class="form-check-label">{{ course.name }} - {{ course.credits }} credits</span>
+              </label>
+            </div>
+            } @empty {
+            <div class="col-12 text-muted">No courses available.</div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="border rounded p-3">
+          <h2 class="h6">Students in Department</h2>
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Age</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (student of students(); track student.id) {
+                <tr>
+                  <td>{{ student.name }}</td>
+                  <td>{{ student.age }}</td>
+                </tr>
+                } @empty {
+                <tr>
+                  <td colspan="2" class="text-center text-muted py-3">No students in this department.</td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    } @else {
+    <div class="alert alert-warning mb-0">Department not found.</div>
+    }
+  </div>
+</section>

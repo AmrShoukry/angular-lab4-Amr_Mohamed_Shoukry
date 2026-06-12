@@ -1,0 +1,37 @@
+<section class="card shadow-sm border-0">
+  <div class="card-header bg-primary text-white">
+    <h1 class="h5 mb-0">Create Course</h1>
+  </div>
+
+  <div class="card-body">
+    <form class="row g-3" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="col-md-8">
+        <label class="form-label" for="course-name">Name</label>
+        <input id="course-name" class="form-control" type="text" formControlName="name" />
+        @if (form.controls.name.touched && form.controls.name.invalid) {
+        <div class="text-danger small mt-1">Course name is required and must be at least 2 characters.</div>
+        }
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="course-credits">Credits</label>
+        <input id="course-credits" class="form-control" type="number" formControlName="credits" min="1" />
+        @if (form.controls.credits.touched && form.controls.credits.invalid) {
+        <div class="text-danger small mt-1">Credits are required.</div>
+        }
+      </div>
+
+      @if (error()) {
+      <div class="col-12">
+        <div class="alert alert-danger mb-0">{{ error() }}</div>
+      </div>
+      }
+
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Saving...' : 'Create Course' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

@@ -1,5 +1,6 @@
-import { Injectable, signal } from '@angular/core';
-import type { Student } from './student';
+import { Injectable, signal, inject } from '@angular/core';
+import type { Student, StudentForm } from './student';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -7,35 +8,34 @@ import type { Student } from './student';
 export class StudentService {
   students = signal<Student[]>([]);
   selectedStudent = signal<Student | null>(null);
+  private baseUrl = 'http://localhost:3000/api/students/';
+  private http = inject(HttpClient);
 
   getStudents() {
-    return this.students;
+    return this.http.get<Student[]>(this.baseUrl);
   }
 
   getSelectedStudent() {
     return this.selectedStudent;
   }
 
-  getStudentById(id: number): Student | undefined {
-    return this.students().find((student) => student.id === id);
+  getStudentById(id: number) {
+    return this.http.get<Student>(`${this.baseUrl}${id}`);
   }
 
-  addStudent(student: Student) {
-    this.students.update((students) => [...students, student]);
+  addStudent(student: StudentForm) {
+    return this.http.post<StudentForm>(this.baseUrl, student);
   }
 
   editStudent(updatedStudent: Student) {
-    const index = this.students().findIndex((s) => s.id === updatedStudent.id);
-    if (index !== -1) {
-      this.students.update((students) => {
-        students[index] = updatedStudent;
-        return students;
-      });
-      this.selectedStudent.set(updatedStudent);
-    }
+    return this.http.put<Student>(`${this.baseUrl}${updatedStudent.id}`, updatedStudent);
   }
 
   selectStudent(student: Student) {
-    this.selectedStudent.set(student);
+    return this.selectedStudent.set(student);
+  }
+
+  deleteStudent(student: Student) {
+    return this.http.delete(`${this.baseUrl}${student.id}`);
   }
 }

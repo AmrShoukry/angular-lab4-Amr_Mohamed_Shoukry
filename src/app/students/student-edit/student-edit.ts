@@ -33,7 +33,14 @@ export class StudentEdit {
         name: this.name(),
         age: this.age(),
       };
-      this.studentService.editStudent(updatedStudent);
+      this.studentService.editStudent(updatedStudent).subscribe({
+        next: (editedStudent) => {
+          this.studentService.selectStudent(editedStudent);
+          this.studentService.getStudents().subscribe((students) => {
+            this.studentService.students.set(students);
+          });
+        },
+      });
     }
     studentForm.reset();
   }
